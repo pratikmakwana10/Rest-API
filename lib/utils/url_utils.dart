@@ -6,5 +6,6 @@ class UrlUtils{
   login = "$baseUrl/auth/login",
   forgot = "$baseUrl/auth/forgotPassword",
   reset = "$baseUrl/auth/resetPassword",
-  getUser = "$baseUrl/user/users?limit=10&page=1";
+  // getUser = "$baseUrl/user/users?limit=10&page=1";
+  getUser = "$baseUrl/user/v2/users";
 }

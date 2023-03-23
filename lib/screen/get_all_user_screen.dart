@@ -105,13 +105,9 @@ class _GetUserState extends State<GetUser> {
   //   return users;
   // }
   Future<void> getAllUsers() async {
-    Map<String, dynamic> body = {
-      "firstName": "ganesha",
-      "limit": 10,
-      "page": 1,
-    };
+    // Map<String, dynamic> body =
 
-    var response = await net.getWithDio(url: UrlUtils.getUser, body: body);
+    var response = await net.getWithDio(url: UrlUtils.getUser );
     print(response);
     if (response != null) {
       AllUsersDetailsModel details = AllUsersDetailsModel.fromJson(response);

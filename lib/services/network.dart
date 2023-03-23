@@ -45,10 +45,10 @@ class Network {
 
     return dio
         .get(url,
-            queryParameters: body,
+            // queryParameters: body,
             options: Options(headers: {
-              "Token":
-                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MWFmZmYyM2ZjMWU5NzBkYWQ2NzMxOCIsImlhdCI6MTY3OTU3NDgwNiwiZXhwIjoxNzExMTMyNDA2fQ.IqfLpTAZbFv4mMeQ2adS0UtEKlDPRrqbHUb5QdYLe1Y"
+              "Authorization":
+                  "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MWFmZmYyM2ZjMWU5NzBkYWQ2NzMxOCIsImlhdCI6MTY3OTU3NDgwNiwiZXhwIjoxNzExMTMyNDA2fQ.IqfLpTAZbFv4mMeQ2adS0UtEKlDPRrqbHUb5QdYLe1Y"
             }))
         .then(
       (Response response) {
@@ -66,6 +66,7 @@ class Network {
         print("ERROR :: $error");
       },
     ).catchError((error) {
+      print(error.toString());
       debugPrint(error);
     });
   }
