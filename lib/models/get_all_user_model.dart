@@ -25,8 +25,7 @@ class AllUsersDetailsModel {
             json["result"].map((x) => AllUserResult.fromJson(x)) ?? []),
       );
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         "success": success,
         "message": message,
         "result": List<dynamic>.from(result.map((x) => x.toJson())),
@@ -35,41 +34,6 @@ class AllUsersDetailsModel {
 
 class AllUserResult {
   AllUserResult({
-    this.userData = const [],
-    this.totalUser = 0,
-    this.currentPageRecord = 0,
-    this.currentPage = 0,
-    this.totalPages = 0,
-  });
-
-  final List<UserDatum> userData;
-  final int totalUser;
-  final int currentPageRecord;
-  final int currentPage;
-  final int totalPages;
-
-  factory AllUserResult.fromJson(Map<String, dynamic> json) =>
-      AllUserResult(
-        userData: List<UserDatum>.from(
-            json["userData"].map((x) => UserDatum.fromJson(x)) ?? []),
-        totalUser: json["totalUser"] ?? 0,
-        currentPageRecord: json["currentPageRecord"] ?? 0,
-        currentPage: json["currentPage"] ?? 0,
-        totalPages: json["totalPages"] ?? 0,
-      );
-
-  Map<String, dynamic> toJson() =>
-      {
-        "userData": List<dynamic>.from(userData.map((x) => x.toJson())),
-        "totalUser": totalUser,
-        "currentPageRecord": currentPageRecord,
-        "currentPage": currentPage,
-        "totalPages": totalPages,
-      };
-}
-
-class UserDatum {
-  UserDatum({
     this.id = "",
     this.firstName = "",
     this.lastName = "",
@@ -82,8 +46,6 @@ class UserDatum {
     this.isActive = false,
     this.isLogin = false,
     this.isVerified = false,
-    this.createdAt,
-    this.updatedAt,
     this.v = 0,
   });
 
@@ -99,12 +61,9 @@ class UserDatum {
   final bool isActive;
   final bool isLogin;
   final bool isVerified;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
   final int v;
 
-  factory UserDatum.fromJson(Map<String, dynamic> json) =>
-      UserDatum(
+  factory AllUserResult.fromJson(Map<String, dynamic> json) => AllUserResult(
         id: json["_id"] ?? "",
         firstName: json["firstName"] ?? "",
         lastName: json["lastName"] ?? "",
@@ -117,13 +76,10 @@ class UserDatum {
         isActive: json["isActive"] ?? false,
         isLogin: json["isLogin"] ?? false,
         isVerified: json["isVerified"] ?? false,
-        createdAt: DateTime.parse(json["createdAt"]),
-        updatedAt: DateTime.parse(json["updatedAt"]),
         v: json["__v"] ?? 0,
       );
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         "_id": id,
         "firstName": firstName,
         "lastName": lastName,
@@ -136,8 +92,6 @@ class UserDatum {
         "isActive": isActive,
         "isLogin": isLogin,
         "isVerified": isVerified,
-        "createdAt": createdAt!.toIso8601String(),
-        "updatedAt": updatedAt!.toIso8601String(),
         "__v": v,
       };
 }

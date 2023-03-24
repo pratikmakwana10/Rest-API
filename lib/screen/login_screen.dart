@@ -3,6 +3,7 @@
 import 'package:dio_api_real/screen/forgot_password_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/login_model.dart';
 import '../models/registration_model.dart';
@@ -14,6 +15,14 @@ class Login extends StatefulWidget {
 
   @override
   State<Login> createState() => _LoginState();
+}
+addStringToSF(String token) async {
+  try {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('token', token);
+  } on Exception catch (e) {
+    print(e.toString());
+  }
 }
 
 class _LoginState extends State<Login> {
@@ -97,6 +106,9 @@ class _LoginState extends State<Login> {
         LoginRecordModel loginDetails = LoginRecordModel(result: Result(user: User()));
 
         loginDetails = LoginRecordModel.fromJson(response);
+
+        net.setApiKeyAndToken(token: loginDetails.result.token);
+        addStringToSF(loginDetails.result.token);
 
         if (kDebugMode) {
           print(loginDetails.toJson());

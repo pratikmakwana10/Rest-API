@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:dio/dio.dart';
 
@@ -14,12 +13,7 @@ class Network {
     debugPrint("POST URL :: $url");
     debugPrint("POST BODY :: $body");
 
-    return dio
-        .post(
-      url,
-      data: body,
-    )
-        .then(
+    return dio.post(url, data: body,).then(
       (Response response) {
         int code = response.statusCode!;
 
@@ -36,6 +30,17 @@ class Network {
     });
   }
 
+  void setApiKeyAndToken({
+    required String token,
+  }) {
+    dio.options.headers.addAll({
+      "Authorization": "Bearer $token",
+    });
+
+    debugPrint(
+        "======= SUCCESS :: TOKEN SET SUCCESSFULLY ======= ::::: TOKEN :: $token");
+  }
+
   Future<dynamic> getWithDio({
     required String url,
     Map<String, dynamic> body = const {},
@@ -46,16 +51,11 @@ class Network {
     return dio
         .get(url,
             // queryParameters: body,
-            options: Options(headers: {
-              "Authorization":
-                  "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MWFmZmYyM2ZjMWU5NzBkYWQ2NzMxOCIsImlhdCI6MTY3OTU3NDgwNiwiZXhwIjoxNzExMTMyNDA2fQ.IqfLpTAZbFv4mMeQ2adS0UtEKlDPRrqbHUb5QdYLe1Y"
-            }))
+            options: Options(headers: {}))
         .then(
       (Response response) {
         int code = response.statusCode!;
-        print(response.statusCode);
-
-        if (code < 200 || code > 400) {
+             if (code < 200 || code > 400) {
           /// HANDEL STATUS
         }
 
@@ -68,6 +68,29 @@ class Network {
     ).catchError((error) {
       print(error.toString());
       debugPrint(error);
+    });
+  }
+  Future<dynamic> putWithDio({
+    required String url,
+    Map<String, dynamic> body = const {},
+  }) {
+    debugPrint("POST URL :: $url");
+    debugPrint("POST BODY :: $body");
+
+    return dio.post(url, data: body,).then(
+          (Response response) {
+        int code = response.statusCode!;
+
+        if (code < 200 || code > 400) {
+          /// HANDEL STATUS
+        }
+
+        print(code.toString());
+
+        return response.data;
+      },
+    ).catchError((error) {
+      debugPrint(error.toString());
     });
   }
 }

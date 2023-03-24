@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:dio_api_real/screen/user_by_id.dart';
 import 'package:dio_api_real/utils/url_utils.dart';
 import 'package:flutter/material.dart';
 
 import '../models/get_all_user_model.dart';
 import '../services/network.dart';
+import 'get_single_profile.dart';
 
 class GetUser extends StatefulWidget {
   const GetUser({Key? key}) : super(key: key);
@@ -28,27 +30,35 @@ class _GetUserState extends State<GetUser> {
       appBar: AppBar(
         title: const Text("Get UserList"),
 
+
       ),
-      body: allUsers.isEmpty ? CircularProgressIndicator() : Column(
-        children: allUsers
-            .map((e) =>
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.chevron_right),
+          onPressed: (){
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const SingleProfile()),
+        );
+      }),
+      body: allUsers.isEmpty ? const Center(child: CircularProgressIndicator()) :
             ListView.builder(
-              itemCount: e.userData.length,
+              itemCount: allUsers.length,
               itemBuilder: (con, index) {
                 return ListTile(
-                  title: textUsers(e, index, e.userData[index].firstName),
-                  subtitle: textUsers(e, index, e.userData[index].email),
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) =>UserById(id:allUsers[index].id,)));
+                  },
+                  title: textUsers(allUsers[index].firstName),
+                  subtitle: textUsers(allUsers[index].email),
                   trailing: textUsers(
-                      e, index, e.userData[index].phoneNumber.toString()),
+                      allUsers[index].phoneNumber.toString()),
                 );
               },
-            ))
-            .toList(),
-      ),
-    );
+            ),
+      );
   }
 
-  Text textUsers(AllUserResult e, int index, String txt) =>
+  Text textUsers(String txt) =>
       Text(
         txt,
         style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),

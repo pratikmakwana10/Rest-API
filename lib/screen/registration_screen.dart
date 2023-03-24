@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dio_api_real/models/registration_model.dart';
 import 'package:dio_api_real/screen/login_screen.dart';
 import 'package:dio_api_real/services/network.dart';
@@ -38,11 +36,11 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text("API"),
+          title: const Text("API"),
         ),
         body: _isLoading
-            ? Center(
-              child: const CupertinoActivityIndicator(
+            ? const Center(
+              child: CupertinoActivityIndicator(
                   radius: 15.0,
                 ),
             )
@@ -61,8 +59,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     buildElevatedButton(),
                     ElevatedButton(onPressed: (){
 
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
-                    }, child: Text("Login Screen>"))
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const Login()));
+                    }, child: const Text("Login Screen>"))
                   ],
                 ),
               ));

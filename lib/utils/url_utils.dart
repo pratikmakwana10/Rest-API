@@ -7,5 +7,7 @@ class UrlUtils{
   forgot = "$baseUrl/auth/forgotPassword",
   reset = "$baseUrl/auth/resetPassword",
   // getUser = "$baseUrl/user/users?limit=10&page=1";
-  getUser = "$baseUrl/user/v2/users";
+  getUser = "$baseUrl/user/v2/users",
+  getProfile = "$baseUrl/user/me",
+  userBYId = "$baseUrl/user";
 }
