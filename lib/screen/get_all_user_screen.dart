@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:dio_api_real/screen/user_by_id.dart';
 import 'package:dio_api_real/utils/url_utils.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +32,7 @@ class _GetUserState extends State<GetUser> {
 
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.chevron_right),
+        child: const Icon(Icons.chevron_right),
           onPressed: (){
         Navigator.push(
           context,
@@ -46,12 +45,22 @@ class _GetUserState extends State<GetUser> {
               itemBuilder: (con, index) {
                 return ListTile(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) =>UserById(id:allUsers[index].id,)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) =>UserById(id:allUsers[index].id,))).then((value) {
+                      if(value == true){
+                        getAllUsers();
+                      }
+                    });
                   },
                   title: textUsers(allUsers[index].firstName),
                   subtitle: textUsers(allUsers[index].email),
                   trailing: textUsers(
                       allUsers[index].phoneNumber.toString()),
+                  leading: GestureDetector(
+                    onTap: () {
+                      deleteUser(allUsers[index].id);
+                    },
+                      child: const Icon(Icons.delete)),
+                  
                 );
               },
             ),
@@ -61,7 +70,7 @@ class _GetUserState extends State<GetUser> {
   Text textUsers(String txt) =>
       Text(
         txt,
-        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
       );
 
   // getRequest() async {
@@ -128,5 +137,14 @@ class _GetUserState extends State<GetUser> {
       });
     } else {}
   }
+Future<void> deleteUser(String id)async {
+    var response = await net.deleteWithDio(url: "${UrlUtils.userBYId}/$id");
+    print(response);
+    if(response != null){
+    getAllUsers();
+    }
+      setState(() {
 
+      });
+    }
 }

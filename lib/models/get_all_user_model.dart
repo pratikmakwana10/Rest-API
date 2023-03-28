@@ -34,6 +34,7 @@ class AllUsersDetailsModel {
 
 class AllUserResult {
   AllUserResult({
+    required this.profileImg,
     this.id = "",
     this.firstName = "",
     this.lastName = "",
@@ -49,7 +50,9 @@ class AllUserResult {
     this.v = 0,
   });
 
+  final ProfileImg profileImg;
   final String id;
+
   final String firstName;
   final String lastName;
   final String email;
@@ -64,6 +67,7 @@ class AllUserResult {
   final int v;
 
   factory AllUserResult.fromJson(Map<String, dynamic> json) => AllUserResult(
+        profileImg: ProfileImg.fromJson(json["profileImg"]??ProfileImg().toJson()),
         id: json["_id"] ?? "",
         firstName: json["firstName"] ?? "",
         lastName: json["lastName"] ?? "",
@@ -80,6 +84,7 @@ class AllUserResult {
       );
 
   Map<String, dynamic> toJson() => {
+        "profileImg": profileImg.toJson(),
         "_id": id,
         "firstName": firstName,
         "lastName": lastName,
@@ -93,5 +98,33 @@ class AllUserResult {
         "isLogin": isLogin,
         "isVerified": isVerified,
         "__v": v,
+      };
+}
+
+class ProfileImg {
+  ProfileImg({
+    this.fileName = "",
+    this.fileSize = "",
+    this.publicId = "",
+    this.url = "",
+  });
+
+  final String fileName;
+  final String fileSize;
+  final String publicId;
+  final String url;
+
+  factory ProfileImg.fromJson(Map<String, dynamic> json) => ProfileImg(
+        fileName: json["fileName"],
+        fileSize: json["fileSize"],
+        publicId: json["public_id"],
+        url: json["url"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "fileName": fileName,
+        "fileSize": fileSize,
+        "public_id": publicId,
+        "url": url,
       };
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 
 Network net = Network();
 
@@ -27,6 +28,31 @@ class Network {
       },
     ).catchError((error) {
       debugPrint(error.toString());
+      return SnackBar(content: error);
+    });
+  }
+  Future<dynamic> postWithDioWithFormData({
+    required String url,
+    required FormData formData,
+  }) {
+    debugPrint("POST URL :: $url");
+
+    return dio.post(url, data: formData,).then(
+      (Response response) {
+        int code = response.statusCode!;
+
+        if (code < 200 || code > 400) {
+          /// HANDEL STATUS
+        }
+
+        print(code.toString());
+
+        print(response.data);
+        return response.data;
+      },
+    ).catchError((error) {
+      debugPrint(error.toString());
+      return SnackBar(content: error);
     });
   }
 
@@ -77,7 +103,28 @@ class Network {
     debugPrint("POST URL :: $url");
     debugPrint("POST BODY :: $body");
 
-    return dio.post(url, data: body,).then(
+    return dio.put(url, data: body,).then(
+          (Response response) {
+        int code = response.statusCode!;
+
+        if (code < 200 || code > 400) {
+          /// HANDEL STATUS
+        }
+
+        print(code.toString());
+
+        return response.data;
+      },
+    ).catchError((error) {
+      debugPrint(error.toString());
+    });
+  }
+  Future<dynamic> deleteWithDio({
+    required String url,
+  }) {
+    debugPrint("POST URL :: $url");
+
+    return dio.delete(url).then(
           (Response response) {
         int code = response.statusCode!;
 

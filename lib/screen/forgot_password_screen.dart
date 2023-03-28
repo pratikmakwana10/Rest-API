@@ -35,7 +35,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           }, child: const Text("Forgot password")),
           ElevatedButton(onPressed: (){
 
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const GetUser()));
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => GetUser()),
+                    (Route<dynamic> route) => false);
           }, child: const Text("Reset Password Screen >"))
         ],
       ),

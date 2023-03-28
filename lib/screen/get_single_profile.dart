@@ -4,6 +4,7 @@ import '../models/get_all_user_model.dart';
 import '../models/get_single_profile.dart';
 import '../services/network.dart';
 import '../utils/url_utils.dart';
+import 'edit_profile.dart';
 
 class SingleProfile extends StatefulWidget {
   const SingleProfile({Key? key}) : super(key: key);
@@ -13,7 +14,7 @@ class SingleProfile extends StatefulWidget {
 }
 
 class _SingleProfileState extends State<SingleProfile> {
-  AllUserResult singleProfile = AllUserResult();
+  AllUserResult singleProfile = AllUserResult(profileImg: ProfileImg());
 
   @override
   void initState() {
@@ -26,6 +27,11 @@ class _SingleProfileState extends State<SingleProfile> {
     return Scaffold(
         appBar: AppBar(
           title: const Text("User Profile"),
+          actions: [
+            IconButton(onPressed: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>EditProfile(singleProfile)));
+            }, icon: Icon(Icons.edit))
+          ],
         ),
         floatingActionButton: FloatingActionButton(
             child: const Icon(Icons.chevron_right),

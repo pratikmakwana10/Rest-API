@@ -15,8 +15,8 @@ class UserById extends StatefulWidget {
 }
 
 class _UserByIdState extends State<UserById> {
-  AllUserResult singleProfile = AllUserResult();
-
+  AllUserResult singleProfile = AllUserResult(profileImg: ProfileImg());
+  bool canPop = false;
 
   @override
   void initState() {
@@ -26,35 +26,48 @@ class _UserByIdState extends State<UserById> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text("User By ID"),
-        actions: [
-          IconButton(onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>EditProfile(singleProfile)));
-          }, icon: Icon(Icons.edit))
-        ],
-        ),
+    return WillPopScope(
+      onWillPop: () async{
 
-        body: singleProfile.id.isEmpty
-            ? const Center(child: CircularProgressIndicator())
-            : Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+        Navigator.pop(context,canPop);
 
-                  const SizedBox(height: 100,),
-                  buildText("Name",singleProfile.firstName),
-                  buildText("Last Name",singleProfile.lastName),
-                  buildText("Email",singleProfile.email),
-                  buildText("Number",singleProfile.phoneNumber.toString()),
-                  buildText("Country",singleProfile.country),
-                  buildText("State",singleProfile.state),
-                  buildText("Company",singleProfile.company),
-                ],
-              ),
-            ));
+          return false;}
+     ,
+      child: Scaffold(
+          appBar: AppBar(
+            title: const Text("User By ID"),
+          actions: [
+            IconButton(onPressed: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>EditProfile(singleProfile))).then((value) {
+                if(value != null){
+                  canPop = true;
+                userById();
+                }
+              });
+            }, icon: Icon(Icons.edit))
+          ],
+          ),
+
+          body: singleProfile.id.isEmpty
+              ? const Center(child: CircularProgressIndicator())
+              : Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+
+                    const SizedBox(height: 100,),
+                    buildText("Name",singleProfile.firstName),
+                    buildText("Last Name",singleProfile.lastName),
+                    buildText("Email",singleProfile.email),
+                    buildText("Number",singleProfile.phoneNumber.toString()),
+                    buildText("Country",singleProfile.country),
+                    buildText("State",singleProfile.state),
+                    buildText("Company",singleProfile.company),
+                  ],
+                ),
+              )),
+    );
   }
 
   Widget buildText(String info,String txt) => Padding(
@@ -73,8 +86,10 @@ class _UserByIdState extends State<UserById> {
     //print(response);
     if (response != null) {
       GetSingleUser details = GetSingleUser.fromJson(response);
-
       singleProfile = details.result;
+     /* if(response != null){
+        Navigator.pop(context,);
+      }*/
       setState(() {});
     } else {}
   }

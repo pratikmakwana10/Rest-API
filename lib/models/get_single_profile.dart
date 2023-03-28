@@ -22,7 +22,7 @@ class GetSingleUser {
   factory GetSingleUser.fromJson(Map<String, dynamic> json) => GetSingleUser(
     success: json["success"] ?? false,
     message: json["message"] ?? "",
-    result: AllUserResult.fromJson(json["result"]?? AllUserResult().toJson()),
+    result: AllUserResult.fromJson(json["result"]?? AllUserResult(profileImg: ProfileImg()).toJson()),
   );
 
   Map<String, dynamic> toJson() => {

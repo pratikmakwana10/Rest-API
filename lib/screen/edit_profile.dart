@@ -1,53 +1,60 @@
+import 'dart:io';
 
-
+import 'package:dio_api_real/screen/user_by_id.dart';
 import 'package:dio_api_real/utils/url_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dio_api_real/services/network.dart';
-
+import 'package:image_picker/image_picker.dart';
+import 'package:dio/dio.dart' as dio;
 import '../models/get_all_user_model.dart';
 import '../models/get_single_profile.dart';
 import '../models/registration_model.dart';
 
 class EditProfile extends StatefulWidget {
   AllUserResult singleProfile;
-   EditProfile(this.singleProfile, {
+
+  EditProfile(
+    this.singleProfile, {
     Key? key,
-
-
-
   }) : super(key: key);
+
   @override
   State<EditProfile> createState() => _EditProfileState();
 }
 
 class _EditProfileState extends State<EditProfile> {
-bool _isLoading = false;
+  bool _isLoading = false;
+  File pImage = File("");
+
   Future<void> editProfile() async {
     try {
       setState(() {
         _isLoading = true;
       });
 
-
-      Map<String,dynamic> body = {
+      Map<String, dynamic> body = {
         "firstName": nameCon.text,
         "lastName": lastNameCon.text,
-        "email": emailCon.text,
         "phoneNumber": phoneNUmberCon.text,
-        "password": "",
         "country": countryCon.text,
         "state": stateCon.text,
         "company": companyCon.text,
       };
 
-      dynamic response =
-      await net.putWithDio(url: UrlUtils.userBYId, body: body);
+      dynamic response = await net.putWithDio(
+          url: "${UrlUtils.userBYId}/${widget.singleProfile.id}", body: body);
+      // url: "${UrlUtils.userBYId}/${widget.id}"
 
       if (response != null) {
-        RegistrationRecModel regDetails = RegistrationRecModel(result: LoginRec());
+        RegistrationRecModel regDetails =
+            RegistrationRecModel(result: LoginRec());
 
         regDetails = RegistrationRecModel.fromJson(response);
+
+        if (regDetails.success) {
+          Navigator.pop(context, true);
+        }
 
         if (kDebugMode) {
           print(regDetails.toJson());
@@ -72,12 +79,14 @@ bool _isLoading = false;
   TextEditingController companyCon = TextEditingController();
   TextEditingController emailCon = TextEditingController();
   TextEditingController phoneNUmberCon = TextEditingController();
-@override
+
+  @override
   void initState() {
-  super.initState();
-  autoFill();
+    super.initState();
+    autoFill();
   }
-  void autoFill(){
+
+  void autoFill() {
     nameCon.text = widget.singleProfile.firstName;
     lastNameCon.text = widget.singleProfile.lastName;
     countryCon.text = widget.singleProfile.country;
@@ -89,43 +98,58 @@ bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: const Text("Edit Profile"),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            customTextFormField("Name",nameCon,true),
-            customTextFormField("Last Name",lastNameCon,true),
-            customTextFormField("Email",emailCon,false),
-            customTextFormField("PhoneNumber",phoneNUmberCon,false),
-            customTextFormField("Country",countryCon,true),
-            customTextFormField("State",stateCon,true),
-            customTextFormField("Company",companyCon,true),
-            ElevatedButton(onPressed: (){
-            //  editProfile();
-
-            }, child: Text("Edit"))
+            InkWell(
+              child: checkImage(),
+              onTap: () async {
+                final ImagePicker _picker = ImagePicker();
+                // Pick an image
+                final XFile? image =
+                    await _picker.pickImage(source: ImageSource.gallery);
+                pImage = File(image!.path);
+                if(pImage.path.isNotEmpty){
+                  uploadImage();
+                }
+                setState(() {});
+              },
+            ),
+            customTextFormField("Name", nameCon, true),
+            customTextFormField("Last Name", lastNameCon, true),
+            customTextFormField("Email", emailCon, false),
+            customTextFormField("PhoneNumber", phoneNUmberCon, true),
+            customTextFormField("Country", countryCon, true),
+            customTextFormField("State", stateCon, true),
+            customTextFormField("Company", companyCon, true),
+            ElevatedButton(
+                onPressed: () {
+                  editProfile();
+                },
+                child: const Text("Edit"))
           ],
         ),
       ),
     );
   }
-  Padding customTextFormField(String hintText, TextEditingController controller, bool enb,
+
+  Padding customTextFormField(
+      String hintText, TextEditingController controller, bool enb,
       {TextInputType inputType = TextInputType.text}) {
     return Padding(
         padding: const EdgeInsets.all(10.0),
         child: TextFormField(
-
           enabled: enb,
-
           keyboardType: inputType,
           controller: controller,
           decoration: InputDecoration(
             hintText: hintText,
             contentPadding:
-            const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
             border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(5.0)),
             ),
@@ -141,5 +165,30 @@ bool _isLoading = false;
         ));
   }
 
-
+  Widget checkImage() {
+    if (pImage.path.isNotEmpty) {
+      return CircleAvatar(
+        radius: 40,
+        child: Image.file(pImage, fit: BoxFit.fill),
+      );
+    } else if (widget.singleProfile.profileImg.url.isNotEmpty) {
+      return CircleAvatar(
+        radius: 40,
+        child: Image.network(widget.singleProfile.profileImg.url,
+            fit: BoxFit.fill),
+      );
+    } else {
+      return CircleAvatar(
+        radius: 40,
+      );
+    }
+  }
+  Future<void> uploadImage() async {
+    String fileName = pImage.path.split('/').last;
+   dio.  FormData formData = dio.FormData.fromMap({
+      "profile":
+      await dio.MultipartFile.fromFile(pImage.path, filename:fileName),
+    });
+      net.postWithDioWithFormData(url: "${UrlUtils.editProfile}/${widget.singleProfile.id}", formData: formData);
+  }
 }

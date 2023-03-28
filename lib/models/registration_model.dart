@@ -4,11 +4,13 @@
 
 import 'dart:convert';
 
-RegistrationRecModel loginRecordDetailsModelFromJson(String str) =>
-    RegistrationRecModel.fromJson(json.decode(str));
+RegistrationRecModel loginRecordDetailsModelFromJson(String str) {
+  return RegistrationRecModel.fromJson(json.decode(str));
+}
 
-String loginRecordDetailsModelToJson(RegistrationRecModel data) =>
-    json.encode(data.toJson());
+String loginRecordDetailsModelToJson(RegistrationRecModel data) {
+  return json.encode(data.toJson());
+}
 
 class RegistrationRecModel {
   RegistrationRecModel({
