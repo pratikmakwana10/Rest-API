@@ -38,7 +38,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => GetUser()),
                     (Route<dynamic> route) => false);
-          }, child: const Text("Reset Password Screen >"))
+          }, child: const Text("All User's Screen >"))
         ],
       ),
     );

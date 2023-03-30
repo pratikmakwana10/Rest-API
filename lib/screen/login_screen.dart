@@ -1,5 +1,3 @@
-
-
 import 'package:dio_api_real/screen/forgot_password_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +14,7 @@ class Login extends StatefulWidget {
   @override
   State<Login> createState() => _LoginState();
 }
+
 addStringToSF(String token) async {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -29,29 +28,55 @@ class _LoginState extends State<Login> {
   bool _isLoading = false;
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Login"),
-       // leading: BackButton(),
+        // leading: BackButton(),
       ),
       body: Column(
         children: [
-          customTextFormField("email",_email),
-          customTextFormField("password",_password),
-          ElevatedButton(onPressed: (){
-            login();
-            
-          }, child: Text("Login")),
-          ElevatedButton(onPressed: (){
+          customTextFormField("email", _email),
+          customTextFormField("password", _password),
+          ElevatedButton(
+              onPressed: () {
+                login().then((value) => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  backgroundColor: Colors.blueGrey,
+                  content: Text(
+                    "User Logged In",
+                    style: TextStyle(
+                        fontSize: 17, fontWeight: FontWeight.bold),
+                  ),
+                  duration: Duration(seconds: 1),
+                )
+                ));
 
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPassword()));
-          }, child: Text("Forgot Password"))
+               /* Future.delayed(Duration(seconds: 3)).then((value) =>
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      backgroundColor: Colors.blueGrey,
+                      content: Text(
+                        "User Logged In",
+                        style: TextStyle(
+                            fontSize: 17, fontWeight: FontWeight.bold),
+                      ),
+                      duration: Duration(seconds: 1),
+                    )));*/
+              },
+              child: Text("Login")),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ForgotPassword()));
+            },
+            child: Text("Forgot Password"),
+          ),
         ],
       ),
     );
   }
+
   Padding customTextFormField(String hintText, TextEditingController controller,
       {TextInputType inputType = TextInputType.text}) {
     return Padding(
@@ -72,7 +97,7 @@ class _LoginState extends State<Login> {
           decoration: InputDecoration(
             hintText: hintText,
             contentPadding:
-            EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(5.0)),
             ),
@@ -87,23 +112,23 @@ class _LoginState extends State<Login> {
           ),
         ));
   }
+
   Future<void> login() async {
     try {
       setState(() {
         _isLoading = true;
       });
 
-
-      Map<String,dynamic> body = {
+      Map<String, dynamic> body = {
         "email": _email.text,
         "password": _password.text,
       };
 
-      dynamic response =
-      await net.postWithDio(url: UrlUtils.login, body: body);
+      dynamic response = await net.postWithDio(url: UrlUtils.login, body: body);
 
       if (response != null) {
-        LoginRecordModel loginDetails = LoginRecordModel(result: Result(user: User()));
+        LoginRecordModel loginDetails =
+            LoginRecordModel(result: Result(user: User()));
 
         loginDetails = LoginRecordModel.fromJson(response);
 
