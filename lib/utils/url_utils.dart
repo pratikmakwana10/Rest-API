@@ -11,5 +11,9 @@ class UrlUtils{
   getUser = "$baseUrl/user/v2/users",
   getProfile = "$baseUrl/user/me",
   userBYId = "$baseUrl/user",
-  editProfile = "$baseUrl/user/profile";
+  editProfile = "$baseUrl/user/profile",
+  logout = "$baseUrl/auth/logout";
+
+//https://react.tutorialstaging.tech/api/v1/auth/logout
+
 }

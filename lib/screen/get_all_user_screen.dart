@@ -1,10 +1,12 @@
 import 'package:dio_api_real/screen/user_by_id.dart';
 import 'package:dio_api_real/utils/url_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/get_all_user_model.dart';
 import '../services/network.dart';
 import 'get_single_profile.dart';
+import 'login_screen.dart';
 
 class GetUser extends StatefulWidget {
   const GetUser({Key? key}) : super(key: key);
@@ -28,6 +30,11 @@ class _GetUserState extends State<GetUser> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Get UserList"),
+        actions: [
+          ElevatedButton(onPressed: (){
+            logOutUser();
+          }, child: Icon(Icons.logout))
+        ],
 
 
       ),
@@ -123,6 +130,16 @@ class _GetUserState extends State<GetUser> {
   //   // print(users);
   //   return users;
   // }
+  Future<void> logOutUser()async {
+    var res= await net.postWithDio(url: UrlUtils.logout);
+    print(res);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('token', "");
+    net.setApiKeyAndToken(token: '');
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => Login()),
+            (Route<dynamic> route) => false);
+  }
   Future<void> getAllUsers() async {
     // Map<String, dynamic> body =
 
